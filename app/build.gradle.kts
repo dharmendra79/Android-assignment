@@ -59,4 +59,7 @@ dependencies {
     implementation(libs.gson)
 
     implementation(libs.kotlinx.coroutines.android)
+
+//    Facebook Shimmer
+    implementation(libs.shimmer)
 }
