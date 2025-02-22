@@ -27,6 +27,12 @@ class TeamDetailFragment : Fragment() {
         binding.recyclerTeamA.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerTeamB.layoutManager = LinearLayoutManager(requireContext())
 
+        viewModel.teamHomeName.observe(viewLifecycleOwner) { value ->
+            binding.txtTeamAName.text = value
+        }
+        viewModel.teamAwayName.observe(viewLifecycleOwner) { value ->
+            binding.txtTeamBName.text = value
+        }
         viewModel.playersA.observe(viewLifecycleOwner) { players ->
             binding.recyclerTeamA.adapter = PlayerAdapter(players)
         }

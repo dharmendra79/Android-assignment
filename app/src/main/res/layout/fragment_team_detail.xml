@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
+        android:layout_margin="8dp"
         android:weightSum="2">
 
         <LinearLayout
@@ -23,6 +24,7 @@
                 android:layout_width="match_parent"
                 android:text="Team A"
                 android:textStyle="bold"
+                android:gravity="start"
                 android:layout_height="wrap_content" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -43,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:text="Team B"
                 android:textStyle="bold"
-                android:gravity="center"
+                android:gravity="end"
                 android:layout_height="wrap_content" />
 
             <androidx.recyclerview.widget.RecyclerView
