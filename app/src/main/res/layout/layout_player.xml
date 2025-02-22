@@ -9,24 +9,63 @@
             type="com.apps.sportzinteractive.model.PlayerModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
+        android:id="@+id/llPlayer"
         android:layout_width="match_parent"
-        android:padding="4dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
 
-        <TextView
-            android:id="@+id/txtPlayerName"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:isCaptain="@{player.iscaptain}"
-            app:isKeeper="@{player.iskeeper}"
-            app:playerName="@{player.name_Full}"
-            android:textSize="14sp"
-            android:textColor="@android:color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="horizontal"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/dummyPlayer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/cricket_player" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp">
+
+                <TextView
+                    android:id="@+id/txtPlayerName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    app:isCaptain="@{player.iscaptain}"
+                    app:isKeeper="@{player.iskeeper}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:playerName="@{player.name_Full}" />
+
+                <TextView
+                    android:id="@+id/txtPlayerStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtPlayerName"
+                    android:layout_marginTop="2dp"
+                    android:text="@{player.batting.style}" />
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="6dp"
+            android:background="@color/grey" />
+    </LinearLayout>
 </layout>

@@ -8,12 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.apps.sportzinteractive.PlayerAdapter
+import com.apps.sportzinteractive.adapter.ViewPagerAdapter
 import com.apps.sportzinteractive.databinding.FragmentTeamDetailBinding
-import com.apps.sportzinteractive.viewModel.ApiViewModel
+import com.apps.sportzinteractive.viewModel.MatchDetailViewModel
+import com.google.android.material.tabs.TabLayoutMediator
 
 class TeamDetailFragment : Fragment() {
     lateinit var binding: FragmentTeamDetailBinding
-    val viewModel: ApiViewModel by activityViewModels()
+    val viewModel: MatchDetailViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -24,20 +26,32 @@ class TeamDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.recyclerTeamA.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerTeamB.layoutManager = LinearLayoutManager(requireContext())
+        val adapter = ViewPagerAdapter(requireActivity())
+        binding.viewPager.adapter = adapter
 
-        viewModel.teamHomeName.observe(viewLifecycleOwner) { value ->
-            binding.txtTeamAName.text = value
-        }
-        viewModel.teamAwayName.observe(viewLifecycleOwner) { value ->
-            binding.txtTeamBName.text = value
-        }
-        viewModel.playersA.observe(viewLifecycleOwner) { players ->
-            binding.recyclerTeamA.adapter = PlayerAdapter(players)
-        }
-        viewModel.playersB.observe(viewLifecycleOwner) { players ->
-            binding.recyclerTeamB.adapter = PlayerAdapter(players)
-        }
+        // Attach TabLayout with ViewPager
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = when (position) {
+                0 -> viewModel.teamHomeName.value
+                1 -> viewModel.teamAwayName.value
+                else -> viewModel.teamHomeName.value
+            }
+        }.attach()
+
+//        binding.recyclerTeamA.layoutManager = LinearLayoutManager(requireContext())
+//        binding.recyclerTeamB.layoutManager = LinearLayoutManager(requireContext())
+//
+//        viewModel.teamHomeName.observe(viewLifecycleOwner) { value ->
+//            binding.txtTeamAName.text = value
+//        }
+//        viewModel.teamAwayName.observe(viewLifecycleOwner) { value ->
+//            binding.txtTeamBName.text = value
+//        }
+//        viewModel.playersA.observe(viewLifecycleOwner) { players ->
+//            binding.recyclerTeamA.adapter = PlayerAdapter(players)
+//        }
+//        viewModel.playersB.observe(viewLifecycleOwner) { players ->
+//            binding.recyclerTeamB.adapter = PlayerAdapter(players)
+//        }
     }
 }

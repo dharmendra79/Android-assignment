@@ -12,17 +12,17 @@ import com.apps.sportzinteractive.fragment.TeamFragment
 import com.apps.sportzinteractive.utils.SPORTZ_URL1
 import com.apps.sportzinteractive.utils.SPORTZ_URL2
 import com.apps.sportzinteractive.utils.isInternetAvailable
-import com.apps.sportzinteractive.viewModel.ApiViewModel
+import com.apps.sportzinteractive.viewModel.MatchDetailViewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val viewModel: ApiViewModel by viewModels()
+    private val viewModel: MatchDetailViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         if (isInternetAvailable(this)) {
-            viewModel.fetchApiData(SPORTZ_URL2)
+            viewModel.fetchApiData(SPORTZ_URL1)
 
             openNewFragment(TeamFragment())
         } else {

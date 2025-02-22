@@ -11,13 +11,12 @@ import com.apps.sportzinteractive.model.PlayerModel
 import com.apps.sportzinteractive.retrofit.ApiRepository
 import kotlinx.coroutines.launch
 
-class ApiViewModel : ViewModel() {
+class MatchDetailViewModel : ViewModel() {
     private val TAG = "ApiViewModel"
     private val repository = ApiRepository()
 
     private val _apiResponse = MutableLiveData<Map<String, Any>?>()
     val apiResponse: LiveData<Map<String, Any>?> get() = _apiResponse
-
 
     private val _matchInfo = MutableLiveData<String>()
     val matchInfo: LiveData<String> = _matchInfo
@@ -33,6 +32,11 @@ class ApiViewModel : ViewModel() {
 
     private val _homeTeamScore = MutableLiveData<String>()
     val homeTeamScore: LiveData<String> = _homeTeamScore
+
+    private val _homeTeamOver = MutableLiveData<String>()
+    val homeTeamOver: LiveData<String> = _homeTeamOver
+    private val _awayTeamOver = MutableLiveData<String>()
+    val awayTeamOver: LiveData<String> = _awayTeamOver
 
     private val _awayTeamScore = MutableLiveData<String>()
     val awayTeamScore: LiveData<String> = _awayTeamScore
@@ -81,7 +85,8 @@ class ApiViewModel : ViewModel() {
             // Extract team scores
             _homeTeamScore.postValue(extractInningsDetails(inningDetails?.getOrNull(1)))
             _awayTeamScore.postValue(extractInningsDetails(inningDetails?.getOrNull(0)))
-
+            _homeTeamOver.postValue(extractInningsOver(inningDetails?.getOrNull(1)))
+            _awayTeamOver.postValue(extractInningsOver(inningDetails?.getOrNull(0)))
             updatePlayersData(teamInfo, teamHome, teamAway)
 
             _loading.postValue(false)
@@ -93,7 +98,13 @@ class ApiViewModel : ViewModel() {
         val runs = inningMap["Total"] ?: "0"
         val wickets = inningMap["Wickets"] ?: "0"
         val overs = inningMap["Overs"] ?: "0.0"
-        return "$runs-$wickets ($overs)"
+        return "$runs-$wickets"
+    }
+
+    private fun extractInningsOver(inning: Any?): String {
+        val inningMap = inning as? Map<*, *> ?: return "N/A"
+        val overs = inningMap["Overs"] ?: "0.0"
+        return "$overs"
     }
 
     fun fetchApiData(url: String) {

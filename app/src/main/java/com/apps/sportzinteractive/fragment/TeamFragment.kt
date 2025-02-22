@@ -1,7 +1,6 @@
 package com.apps.sportzinteractive.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.apps.sportzinteractive.databinding.FragmentTeamsBinding
 import com.apps.sportzinteractive.screens.MainActivity
-import com.apps.sportzinteractive.viewModel.ApiViewModel
+import com.apps.sportzinteractive.viewModel.MatchDetailViewModel
 
 class TeamFragment : Fragment() {
     private val TAG = "TeamFragment"
     private lateinit var binding: FragmentTeamsBinding
-    private val viewModel: ApiViewModel by activityViewModels()
+    private val viewModel: MatchDetailViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,15 +51,27 @@ class TeamFragment : Fragment() {
             binding.txtAwayTeamScore.text = it
         }
 
+        viewModel.homeTeamOver.observe(viewLifecycleOwner) {
+            binding.txtTeamHomeOver.text = it
+        }
+
+        viewModel.awayTeamOver.observe(viewLifecycleOwner) {
+            binding.txtTeamAwayOver.text = it
+        }
+
+        viewModel.awayTeamScore.observe(viewLifecycleOwner) {
+            binding.txtAwayTeamScore.text = it
+        }
+
         viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
             if (isLoading) {
                 binding.shimmerLayout.startShimmer()
                 binding.shimmerLayout.visibility = View.VISIBLE
-                binding.llDataLayout.visibility = View.GONE
+                binding.llTeamDetail.visibility = View.GONE
             } else {
                 binding.shimmerLayout.stopShimmer()
                 binding.shimmerLayout.visibility = View.GONE
-                binding.llDataLayout.visibility = View.VISIBLE
+                binding.llTeamDetail.visibility = View.VISIBLE
             }
         }
         viewModel.apiResponse.observe(viewLifecycleOwner) { response ->
