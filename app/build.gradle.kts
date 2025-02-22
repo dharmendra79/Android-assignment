@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.parcelize)
     id("kotlin-kapt")
 }
 
@@ -38,6 +39,8 @@ android {
     }
     buildFeatures {
         dataBinding = true
+        viewBinding = true
+
     }
 }
 
@@ -53,6 +56,7 @@ dependencies {
 //    API and Internet calling
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)

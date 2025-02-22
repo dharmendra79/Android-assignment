@@ -5,11 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.apps.sportzinteractive.model.Batting
+import com.apps.sportzinteractive.model.Bowling
+import com.apps.sportzinteractive.model.PlayerModel
 import com.apps.sportzinteractive.retrofit.ApiRepository
 import kotlinx.coroutines.launch
 
 class ApiViewModel : ViewModel() {
-
+    private val TAG = "ApiViewModel"
     private val repository = ApiRepository()
 
     private val _apiResponse = MutableLiveData<Map<String, Any>?>()
@@ -37,6 +40,11 @@ class ApiViewModel : ViewModel() {
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
+    private val _playersA = MutableLiveData<List<PlayerModel>>()
+    val playersA: LiveData<List<PlayerModel>> get() = _playersA
+    private val _playersB = MutableLiveData<List<PlayerModel>>()
+    val playersB: LiveData<List<PlayerModel>> get() = _playersB
+
     fun processApiResponse(response: Map<*, *>?) {
         response?.let {
             val matchDetails = it["Matchdetail"] as? Map<*, *>
@@ -62,16 +70,85 @@ class ApiViewModel : ViewModel() {
 
             // Extract team names
             _teamHomeName.postValue(
-                teamInfo?.get(teamHome)?.let { (it as? Map<*, *>)?.get("Name_Full") }?.toString() ?: "N/A"
+                teamInfo?.get(teamHome)?.let { (it as? Map<*, *>)?.get("Name_Full") }?.toString()
+                    ?: "N/A"
             )
             _teamAwayName.postValue(
-                teamInfo?.get(teamAway)?.let { (it as? Map<*, *>)?.get("Name_Full") }?.toString() ?: "N/A"
+                teamInfo?.get(teamAway)?.let { (it as? Map<*, *>)?.get("Name_Full") }?.toString()
+                    ?: "N/A"
             )
 
             // Extract team scores
             _homeTeamScore.postValue(extractInningsDetails(inningDetails?.getOrNull(1)))
             _awayTeamScore.postValue(extractInningsDetails(inningDetails?.getOrNull(0)))
 
+            updatePlayersData(teamInfo, teamHome, teamAway)
+
+//            val playersTeamA = teamHomeDetail["Players"] as Map<*, *>
+//            val playerAList = playersTeamA.mapNotNull { player ->
+//                val playerData = player.value as? Map<*, *>
+//                val isCaptain: Boolean = playerData?.contains("isCaptain") == true
+//
+//                PlayerModel(
+//                    Batting(
+//                        (playerData?.get("Batting") as Map<*, *>)["Average"] as? String
+//                            ?: "N/A",
+//                        (playerData["Batting"] as Map<*, *>)["Runs"] as? String
+//                            ?: "N/A",
+//                        (playerData["Batting"] as Map<*, *>)["Strikerate"] as? String
+//                            ?: "N/A",
+//                        (playerData["Batting"] as Map<*, *>)["Style"] as? String
+//                            ?: "N/A",
+//                    ),
+//                    Bowling(
+//                        (playerData?.get("Bowling") as Map<*, *>)["Average"] as? String
+//                            ?: "N/A",
+//                        (playerData["Bowling"] as Map<*, *>)["Economyrate"] as? String
+//                            ?: "N/A",
+//                        (playerData["Bowling"] as Map<*, *>)["Style"] as? String
+//                            ?: "N/A",
+//                        (playerData["Bowling"] as Map<*, *>)["Wickets"] as? String
+//                            ?: "N/A",
+//                    ),
+//                    isCaptain,
+//                    playerData["Name_Full"] as? String ?: "Unknown",
+//                    playerData["Position"] as? String ?: "N/A"
+//                )
+//            }
+//            _playersA.postValue(playerAList)
+////            Log.d(TAG, "TeamA Players: ${_playersA}")
+//            val playersTeamB = teamAwayDetails["Players"] as Map<*, *>
+//            val playerBList = playersTeamB.mapNotNull { player ->
+//                val playerData = player.value as? Map<*, *>
+//                val isCaptain: Boolean = playerData?.contains("isCaptain") == true
+//
+//                PlayerModel(
+//                    Batting(
+//                        (playerData?.get("Batting") as Map<*, *>)["Average"] as? String
+//                            ?: "N/A",
+//                        (playerData["Batting"] as Map<*, *>)["Runs"] as? String
+//                            ?: "N/A",
+//                        (playerData["Batting"] as Map<*, *>)["Strikerate"] as? String
+//                            ?: "N/A",
+//                        (playerData["Batting"] as Map<*, *>)["Style"] as? String
+//                            ?: "N/A",
+//                    ),
+//                    Bowling(
+//                        (playerData?.get("Bowling") as Map<*, *>)["Average"] as? String
+//                            ?: "N/A",
+//                        (playerData["Bowling"] as Map<*, *>)["Economyrate"] as? String
+//                            ?: "N/A",
+//                        (playerData["Bowling"] as Map<*, *>)["Style"] as? String
+//                            ?: "N/A",
+//                        (playerData["Bowling"] as Map<*, *>)["Wickets"] as? String
+//                            ?: "N/A",
+//                    ),
+//                    isCaptain,
+//                    playerData["Name_Full"] as? String ?: "Unknown",
+//                    playerData["Position"] as? String ?: "N/A"
+//                )
+//            }
+//            _playersB.postValue(playerBList)
             // Stop shimmer and show data
             _loading.postValue(false)
         } ?: Log.e("API_RESPONSE", "No data received")
@@ -91,4 +168,52 @@ class ApiViewModel : ViewModel() {
             _apiResponse.postValue(response)
         }
     }
+
+    private fun extractPlayers(teamDetails: Map<*, *>?): List<PlayerModel> {
+        val playersMap = teamDetails?.get("Players") as? Map<*, *> ?: return emptyList()
+
+        return playersMap.mapNotNull { (_, value) ->
+            val playerData = value as? Map<*, *> ?: return@mapNotNull null
+
+            fun extractBattingData(): Batting {
+                val batting = playerData["Batting"] as? Map<*, *> ?: emptyMap<String, String>()
+                return Batting(
+                    batting["Average"] as? String ?: "N/A",
+                    batting["Runs"] as? String ?: "N/A",
+                    batting["Strikerate"] as? String ?: "N/A",
+                    batting["Style"] as? String ?: "N/A"
+                )
+            }
+
+            fun extractBowlingData(): Bowling {
+                val bowling = playerData["Bowling"] as? Map<*, *> ?: emptyMap<String, String>()
+                return Bowling(
+                    bowling["Average"] as? String ?: "N/A",
+                    bowling["Economyrate"] as? String ?: "N/A",
+                    bowling["Style"] as? String ?: "N/A",
+                    bowling["Wickets"] as? String ?: "N/A"
+                )
+            }
+
+            val isCaptain: Boolean = playerData.contains("Iscaptain")
+            val isKeeper: Boolean = playerData.contains("Iskeeper")
+            PlayerModel(
+                extractBattingData(),
+                extractBowlingData(),
+                isCaptain,
+                isKeeper,
+                playerData["Name_Full"] as? String ?: "Unknown",
+                playerData["Position"] as? String ?: "N/A"
+            )
+        }
+    }
+
+    private fun updatePlayersData(teamInfo: Map<*, *>?, teamHome: String, teamAway: String) {
+        val teamHomeDetail = teamInfo?.get(teamHome) as? Map<*, *>
+        val teamAwayDetail = teamInfo?.get(teamAway) as? Map<*, *>
+
+        _playersA.postValue(extractPlayers(teamHomeDetail))
+        _playersB.postValue(extractPlayers(teamAwayDetail))
+    }
+
 }
