@@ -29,11 +29,10 @@ class FragmentTeamHome : Fragment() {
         binding.apply {
             recyclerTeamA.layoutManager = LinearLayoutManager(requireContext())
             viewModel.playersA.observe(viewLifecycleOwner) { players ->
-                recyclerTeamA.adapter = PlayerAdapter(players) { playerName ->
-                    showPlayerDialog(requireContext(), playerName)
+                recyclerTeamA.adapter = PlayerAdapter(players) { player ->
+                    showPlayerDialog(requireContext(), player)
                 }
             }
         }
-
     }
 }

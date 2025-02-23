@@ -25,7 +25,7 @@
                 android:id="@+id/shimmerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:shimmer_duration="1200"
                 app:shimmer_intensity="0.8">
 
@@ -145,7 +145,7 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/txtTeamMatches"
@@ -301,7 +301,6 @@
 
                 </RelativeLayout>
 
-                <!-- Match Details -->
                 <TextView
                     android:id="@+id/txtMatchResult"
                     android:layout_width="wrap_content"
@@ -312,6 +311,21 @@
                     android:textColor="#090909"
                     android:textSize="14sp" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/fullTableButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/rounded_button_background"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:text="Full table >"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

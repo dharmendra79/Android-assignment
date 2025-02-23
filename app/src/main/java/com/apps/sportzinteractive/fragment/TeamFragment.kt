@@ -89,5 +89,9 @@ class TeamFragment : Fragment() {
         binding.cardView.setOnClickListener {
             (activity as? MainActivity)?.openNewFragment(TeamDetailFragment())
         }
+
+        binding.fullTableButton.setOnClickListener {
+            (activity as? MainActivity)?.openNewFragment(TeamDetailFragment())
+        }
     }
 }

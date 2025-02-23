@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.apps.sportzinteractive.model.PlayerModel
 
 fun isInternetAvailable(context: Context): Boolean {
     val connectivityManager =
@@ -18,10 +19,10 @@ fun isInternetAvailable(context: Context): Boolean {
     return false
 }
 
-fun showPlayerDialog(context: Context, playerName: String) {
+fun showPlayerDialog(context: Context, player: PlayerModel) {
     AlertDialog.Builder(context)
         .setTitle("Player Selected")
-        .setMessage("You clicked on $playerName")
+        .setMessage("You clicked on ${player.Name_Full}, - ${player.Batting.Style} - ${player.Bowling.Style}")
         .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
         .show()
 }

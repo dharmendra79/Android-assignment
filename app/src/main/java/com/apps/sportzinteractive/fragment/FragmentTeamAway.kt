@@ -28,8 +28,8 @@ class FragmentTeamAway : Fragment() {
         binding.apply {
             recyclerTeamB.layoutManager = LinearLayoutManager(requireContext())
             viewModel.playersB.observe(viewLifecycleOwner) { players ->
-                recyclerTeamB.adapter = PlayerAdapter(players) { playerName ->
-                    showPlayerDialog(requireContext(), playerName)
+                recyclerTeamB.adapter = PlayerAdapter(players) { player ->
+                    showPlayerDialog(requireContext(), player)
                 }
             }
         }

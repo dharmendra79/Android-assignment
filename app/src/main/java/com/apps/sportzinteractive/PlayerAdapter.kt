@@ -7,19 +7,19 @@ import com.apps.sportzinteractive.databinding.LayoutPlayerBinding
 import com.apps.sportzinteractive.model.PlayerModel
 
 class PlayerAdapter(private val players: List<PlayerModel>,
-                    private val onItemClick: (String) -> Unit) :
+                    private val onItemClick: (PlayerModel) -> Unit) :
     RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>() {
 
     class PlayerViewHolder(private val binding: LayoutPlayerBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
 
-        fun bind(player: PlayerModel, onItemClick: (String) -> Unit) {
+        fun bind(player: PlayerModel, onItemClick: (PlayerModel) -> Unit) {
             binding.player = player  // Set player data to binding
             binding.executePendingBindings()  // Ensure UI updates immediately
 
             binding.root.setOnClickListener {
-                onItemClick(player.Name_Full)
+                onItemClick(player)
             }
         }
     }

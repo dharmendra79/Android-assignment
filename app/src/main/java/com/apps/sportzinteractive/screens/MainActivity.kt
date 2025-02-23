@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
             /**
              * Change URL to check the response for other API
              * */
-            viewModel.fetchApiData(SPORTZ_URL2)
+            viewModel.fetchApiData(SPORTZ_URL1)
 
             openNewFragment(TeamFragment())
         } else {
