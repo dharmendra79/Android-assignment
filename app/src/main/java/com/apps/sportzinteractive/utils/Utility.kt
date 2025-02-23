@@ -22,7 +22,7 @@ fun isInternetAvailable(context: Context): Boolean {
 fun showPlayerDialog(context: Context, player: PlayerModel) {
     AlertDialog.Builder(context)
         .setTitle("Player Selected")
-        .setMessage("You clicked on ${player.Name_Full}, - ${player.Batting.Style} - ${player.Bowling.Style}")
+        .setMessage("Player Name: ${player.Name_Full}, \nBatting Style: ${player.Batting.Style}, \nBowling Style: ${player.Bowling.Style}")
         .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
         .show()
 }
