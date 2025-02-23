@@ -161,5 +161,4 @@ class MatchDetailViewModel : ViewModel() {
         _playersA.postValue(extractPlayers(teamHomeDetail))
         _playersB.postValue(extractPlayers(teamAwayDetail))
     }
-
 }
