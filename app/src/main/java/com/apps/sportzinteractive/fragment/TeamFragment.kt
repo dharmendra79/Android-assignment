@@ -10,6 +10,14 @@ import com.apps.sportzinteractive.databinding.FragmentTeamsBinding
 import com.apps.sportzinteractive.screens.MainActivity
 import com.apps.sportzinteractive.viewModel.MatchDetailViewModel
 
+/**
+ * TeamFragment is responsible for displaying match details, including team names,
+ * scores, overs, and results. It also manages UI loading states using a shimmer effect
+ * and allows users to navigate to TeamDetailFragment.
+ *
+ * @author [Your Name]
+ */
+
 class TeamFragment : Fragment() {
     private val TAG = "TeamFragment"
     private lateinit var binding: FragmentTeamsBinding

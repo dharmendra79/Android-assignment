@@ -20,6 +20,18 @@ class TeamDetailFragment : Fragment() {
     private val viewModel: MatchDetailViewModel by activityViewModels()
     private var currentFilter: String = "All" // Stores the last applied filter
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container          If non-null, this is the parent view that the fragment's
+     * UI should be attached to. The fragment should not add the view itself,
+     * but rather return the view to the host.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     * @return Return the View for the fragment's UI, or null.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -27,6 +39,10 @@ class TeamDetailFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Setting up the viewPager with TabLayout to display the team squad and a filter FloatinActionButton
+     * to filter the data for All Team, Team A ana Team B
+     * */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -36,6 +52,19 @@ class TeamDetailFragment : Fragment() {
             showFilterDialog()
         }
     }
+
+    /**
+     * Sets up the ViewPager with fragments based on the provided filter.
+     *
+     * This method dynamically creates and configures the ViewPager adapter,
+     * populating it with either one or two fragments representing team squads,
+     * depending on the filter applied. It also configures the TabLayout to
+     * display the appropriate team names as tabs.
+     *
+     * @param filter The filter to apply, which determines which fragments and
+     * team names are used. It can be "All", the name of the home team,
+     * or the name of the away team.
+     */
 
     private fun setupViewPager(filter: String) {
         val teamHome = viewModel.teamHomeName.value ?: "Team A"
