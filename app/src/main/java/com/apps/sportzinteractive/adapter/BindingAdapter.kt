@@ -7,7 +7,7 @@ object BindingAdapter {
     @JvmStatic
     @BindingAdapter("isCaptain", "isKeeper", "playerName")
     fun setText(txt: TextView, isCaptain: Boolean, isKeeper: Boolean, playerName: String) {
-        val name = playerName ?: "Unknown"
+        val name = playerName
 
         txt.text = when {
             isKeeper && isCaptain -> "$name (WK & C)"

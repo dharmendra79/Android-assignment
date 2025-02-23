@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.apps.sportzinteractive.PlayerAdapter
 import com.apps.sportzinteractive.databinding.FragmentTeamAwayBinding
+import com.apps.sportzinteractive.utils.showPlayerDialog
 import com.apps.sportzinteractive.viewModel.MatchDetailViewModel
 
 class FragmentTeamAway : Fragment() {
@@ -24,9 +25,13 @@ class FragmentTeamAway : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerTeamB.layoutManager = LinearLayoutManager(requireContext())
-        viewModel.playersB.observe(viewLifecycleOwner) { players ->
-            binding.recyclerTeamB.adapter = PlayerAdapter(players)
+        binding.apply {
+            recyclerTeamB.layoutManager = LinearLayoutManager(requireContext())
+            viewModel.playersB.observe(viewLifecycleOwner) { players ->
+                recyclerTeamB.adapter = PlayerAdapter(players) { playerName ->
+                    showPlayerDialog(requireContext(), playerName)
+                }
+            }
         }
     }
 }

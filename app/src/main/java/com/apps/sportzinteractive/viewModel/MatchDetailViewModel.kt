@@ -12,7 +12,6 @@ import com.apps.sportzinteractive.retrofit.ApiRepository
 import kotlinx.coroutines.launch
 
 class MatchDetailViewModel : ViewModel() {
-    private val TAG = "ApiViewModel"
     private val repository = ApiRepository()
 
     private val _apiResponse = MutableLiveData<Map<String, Any>?>()
@@ -61,11 +60,13 @@ class MatchDetailViewModel : ViewModel() {
 
             // Extract match info
             val match = matchDetails?.get("Match") as? Map<*, *>
+            val venue = matchDetails?.get("Venue") as? Map<*, *>
             _matchInfo.postValue(
                 listOfNotNull(
                     match?.get("Number") as? String,
                     match?.get("Date") as? String,
-                    "@${match?.get("Time") as? String}"
+                    match?.get("Time") as? String,
+                    " at ${venue?.get("Name")}"
                 ).joinToString(", ")
             )
 

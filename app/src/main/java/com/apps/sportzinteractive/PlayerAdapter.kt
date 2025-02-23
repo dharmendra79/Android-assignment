@@ -6,15 +6,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.apps.sportzinteractive.databinding.LayoutPlayerBinding
 import com.apps.sportzinteractive.model.PlayerModel
 
-class PlayerAdapter(private val players: List<PlayerModel>) :
+class PlayerAdapter(private val players: List<PlayerModel>,
+                    private val onItemClick: (String) -> Unit) :
     RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>() {
 
     class PlayerViewHolder(private val binding: LayoutPlayerBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(player: PlayerModel) {
+
+        fun bind(player: PlayerModel, onItemClick: (String) -> Unit) {
             binding.player = player  // Set player data to binding
             binding.executePendingBindings()  // Ensure UI updates immediately
+
+            binding.root.setOnClickListener {
+                onItemClick(player.Name_Full)
+            }
         }
     }
 
@@ -25,7 +31,7 @@ class PlayerAdapter(private val players: List<PlayerModel>) :
     }
 
     override fun onBindViewHolder(holder: PlayerViewHolder, position: Int) {
-        holder.bind(players[position])
+        holder.bind(players[position], onItemClick)
     }
 
     override fun getItemCount(): Int = players.size

@@ -22,6 +22,10 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         if (isInternetAvailable(this)) {
+
+            /**
+             * Change URL to check the response for other API
+             * */
             viewModel.fetchApiData(SPORTZ_URL1)
 
             openNewFragment(TeamFragment())

@@ -1,21 +1,25 @@
 package com.apps.sportzinteractive.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.apps.sportzinteractive.PlayerAdapter
 import com.apps.sportzinteractive.adapter.ViewPagerAdapter
 import com.apps.sportzinteractive.databinding.FragmentTeamDetailBinding
 import com.apps.sportzinteractive.viewModel.MatchDetailViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 
 class TeamDetailFragment : Fragment() {
-    lateinit var binding: FragmentTeamDetailBinding
-    val viewModel: MatchDetailViewModel by activityViewModels()
+    private val TAG = "TeamDetailFragment"
+    private lateinit var binding: FragmentTeamDetailBinding
+    private lateinit var adapter: ViewPagerAdapter
+    private val viewModel: MatchDetailViewModel by activityViewModels()
+    private var currentFilter: String = "All" // Stores the last applied filter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -26,32 +30,60 @@ class TeamDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = ViewPagerAdapter(requireActivity())
+        setupViewPager("All") // Default filter (All)
+
+        binding.filterTeam.setOnClickListener {
+            showFilterDialog()
+        }
+    }
+
+    private fun setupViewPager(filter: String) {
+        val teamHome = viewModel.teamHomeName.value ?: "Team A"
+        val teamAway = viewModel.teamAwayName.value ?: "Team B"
+
+        val fragments = when (filter) {
+            "All" -> listOf(FragmentTeamHome(), FragmentTeamAway())
+            teamHome -> listOf(FragmentTeamHome())
+            teamAway -> listOf(FragmentTeamAway())
+            else -> listOf(FragmentTeamHome(), FragmentTeamAway())
+        }
+
+        val teamNames = when (filter) {
+            "All" -> listOf(teamHome, teamAway)
+            teamHome -> listOf(teamHome)
+            teamAway -> listOf(teamAway)
+            else -> listOf(teamHome, teamAway)
+        }
+
+        adapter = ViewPagerAdapter(requireActivity(), fragments, teamNames)
         binding.viewPager.adapter = adapter
+        binding.viewPager.isUserInputEnabled = teamNames.size > 1 // Enable swiping only if both tabs are present
 
-        // Attach TabLayout with ViewPager
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = when (position) {
-                0 -> viewModel.teamHomeName.value
-                1 -> viewModel.teamAwayName.value
-                else -> viewModel.teamHomeName.value
-            }
+            tab.text = teamNames[position]
         }.attach()
+    }
 
-//        binding.recyclerTeamA.layoutManager = LinearLayoutManager(requireContext())
-//        binding.recyclerTeamB.layoutManager = LinearLayoutManager(requireContext())
-//
-//        viewModel.teamHomeName.observe(viewLifecycleOwner) { value ->
-//            binding.txtTeamAName.text = value
-//        }
-//        viewModel.teamAwayName.observe(viewLifecycleOwner) { value ->
-//            binding.txtTeamBName.text = value
-//        }
-//        viewModel.playersA.observe(viewLifecycleOwner) { players ->
-//            binding.recyclerTeamA.adapter = PlayerAdapter(players)
-//        }
-//        viewModel.playersB.observe(viewLifecycleOwner) { players ->
-//            binding.recyclerTeamB.adapter = PlayerAdapter(players)
-//        }
+    private fun showFilterDialog() {
+        val options = arrayOf("All", viewModel.teamHomeName.value.toString(), viewModel.teamAwayName.value.toString())
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Filter Teams")
+            .setItems(options) { _, which ->
+                val selectedFilter = options[which]
+
+                if (selectedFilter != currentFilter) { // Prevent redundant updates
+                    currentFilter = selectedFilter
+                    filterTeams(selectedFilter)
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun filterTeams(filter: String) {
+        Log.d(TAG, "Applying filter: $filter")
+        setupViewPager(filter)
+        binding.viewPager.currentItem = 0 // Always reset to the first tab
     }
 }

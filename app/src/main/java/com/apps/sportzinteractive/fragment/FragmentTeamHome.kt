@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.apps.sportzinteractive.PlayerAdapter
 import com.apps.sportzinteractive.R
 import com.apps.sportzinteractive.databinding.FragmentTeamHomeBinding
+import com.apps.sportzinteractive.utils.showPlayerDialog
 import com.apps.sportzinteractive.viewModel.MatchDetailViewModel
 
 class FragmentTeamHome : Fragment() {
@@ -25,9 +26,14 @@ class FragmentTeamHome : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerTeamA.layoutManager = LinearLayoutManager(requireContext())
-        viewModel.playersA.observe(viewLifecycleOwner) { players ->
-            binding.recyclerTeamA.adapter = PlayerAdapter(players)
+        binding.apply {
+            recyclerTeamA.layoutManager = LinearLayoutManager(requireContext())
+            viewModel.playersA.observe(viewLifecycleOwner) { players ->
+                recyclerTeamA.adapter = PlayerAdapter(players) { playerName ->
+                    showPlayerDialog(requireContext(), playerName)
+                }
+            }
         }
+
     }
 }

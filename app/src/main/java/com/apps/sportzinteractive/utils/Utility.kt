@@ -1,5 +1,6 @@
 package com.apps.sportzinteractive.utils
 
+import android.app.AlertDialog
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -16,3 +17,13 @@ fun isInternetAvailable(context: Context): Boolean {
     }
     return false
 }
+
+fun showPlayerDialog(context: Context, playerName: String) {
+    AlertDialog.Builder(context)
+        .setTitle("Player Selected")
+        .setMessage("You clicked on $playerName")
+        .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+        .show()
+}
+
+
